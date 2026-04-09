@@ -307,6 +307,21 @@ canvas.sig-mini { width: 100%; height: 50px; display: block; border-radius: 6px;
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
+
+/* ── Select (dropdown) ──────────────────── */
+select {
+  width: 100%; font-size: 15px; padding: 13px 14px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg2); color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  -webkit-appearance: none; appearance: none;
+  transition: border-color .15s, box-shadow .15s;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b8fa8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); }
+select option { background: var(--bg2); color: var(--text); }
 </style>
 </head>
 <body>
@@ -358,8 +373,8 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
               <span class="tier-badge">Flagship</span>
             </div>
             <div class="tier-amount">$8,000</div>
-            <div class="tier-shares">Pledged: <strong>2,000 shares</strong></div>
-            <div class="tier-ratio">Best value tier</div>
+            <div class="tier-shares">Pledged: <strong>1,600 shares</strong></div>
+            <div class="tier-ratio">20% share rate</div>
           </div>
           <div class="tier-check">
             <svg width="12" height="10" viewBox="0 0 12 10"><path d="M1 5l3.5 3.5L11 1" stroke="var(--bg)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -372,7 +387,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
           <div>
             <div class="tier-amount">$6,000</div>
             <div class="tier-shares">Pledged: <strong>1,200 shares</strong></div>
-            <div class="tier-ratio">0.2 shares per dollar</div>
+            <div class="tier-ratio">20% share rate</div>
           </div>
           <div class="tier-check">
             <svg width="12" height="10" viewBox="0 0 12 10"><path d="M1 5l3.5 3.5L11 1" stroke="var(--bg)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -385,7 +400,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
           <div>
             <div class="tier-amount">$4,000</div>
             <div class="tier-shares">Pledged: <strong>800 shares</strong></div>
-            <div class="tier-ratio">0.2 shares per dollar</div>
+            <div class="tier-ratio">20% share rate</div>
           </div>
           <div class="tier-check">
             <svg width="12" height="10" viewBox="0 0 12 10"><path d="M1 5l3.5 3.5L11 1" stroke="var(--bg)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -397,20 +412,21 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
         <div class="tier-header">
           <div>
             <div class="tier-amount" id="customAmtDisplay">Custom</div>
-            <div class="tier-shares" id="customShareDisplay">Enter amount below</div>
-            <div class="tier-ratio">0.2 shares per dollar · amounts over $10,000 earn +5% share bonus</div>
+            <div class="tier-shares" id="customShareDisplay">Select amount below</div>
+            <div class="tier-ratio">20% share rate · 25% on amounts over $10,000</div>
           </div>
           <div class="tier-check">
             <svg width="12" height="10" viewBox="0 0 12 10"><path d="M1 5l3.5 3.5L11 1" stroke="var(--bg)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
         </div>
         <div class="tier-custom-row">
-          <div class="custom-note">0.2 shares per dollar — amounts over $10,000 earn a 5% share bonus</div>
+          <div class="custom-note">20% share rate — amounts over $10,000 earn 25% share rate on the excess</div>
           <div class="field" style="margin-bottom:0">
             <label>Loan Amount ($)</label>
-            <input type="number" id="customAmt" placeholder="e.g. 12,000" min="1" step="0.01" inputmode="decimal" oninput="calcCustom()">
+            <select id="customAmt" onchange="calcCustom()">
+              <option value="0">— Select amount —</option>
+            </select>
           </div>
-          <div class="warn" id="customWarn">Maximum custom loan requires lender confirmation.</div>
         </div>
       </div>
 
@@ -510,16 +526,16 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
   <div class="step" id="s3">
     <div class="step-num">4</div>
     <div class="step-title">Borrower Information</div>
-    <div class="step-desc">The person <em>receiving</em> the loan fills this out and signs.</div>
+    <div class="step-desc">Borrower details are pre-filled. Verify and sign below.</div>
 
-    <div class="field"><label>Full legal name</label><input type="text" id="bName" placeholder="Peter W Davidsmeier" autocomplete="name" oninput="save()"></div>
-    <div class="field"><label>Street address</label><input type="text" id="bAddr" placeholder="456 Oak Ave" oninput="save()"></div>
+    <div class="field"><label>Full legal name</label><input type="text" id="bName" value="Peter W Davidsmeier" autocomplete="name" oninput="save()"></div>
+    <div class="field"><label>Street address</label><input type="text" id="bAddr" value="2574 37th Ave N" oninput="save()"></div>
     <div class="g2">
-      <div class="field"><label>City</label><input type="text" id="bCity" placeholder="St. Petersburg" oninput="save()"></div>
-      <div class="field"><label>ZIP</label><input type="text" id="bZip" placeholder="33701" inputmode="numeric" oninput="save()"></div>
+      <div class="field"><label>City</label><input type="text" id="bCity" value="St Petersburg" oninput="save()"></div>
+      <div class="field"><label>ZIP</label><input type="text" id="bZip" value="33713" inputmode="numeric" oninput="save()"></div>
     </div>
-    <div class="field"><label>Email</label><input type="email" id="bEmail" placeholder="pete@dealwhisper.com" inputmode="email" oninput="save()"></div>
-    <div class="field"><label>Phone</label><input type="tel" id="bPhone" placeholder="(727) 400-2225" inputmode="tel" oninput="save()"></div>
+    <div class="field"><label>Email</label><input type="email" id="bEmail" value="pete@dealwhisper.com" inputmode="email" oninput="save()"></div>
+    <div class="field"><label>Phone</label><input type="tel" id="bPhone" value="(727) 400-2225" inputmode="tel" oninput="save()"></div>
 
     <div class="sig-wrap">
       <span class="sig-label">Borrower signature — draw below</span>
@@ -571,8 +587,9 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
     </div>
 
     <div class="export-section">
-      <button class="btn btn-primary" onclick="exportPDF()">📄 Download Signed PDF</button>
-      <button class="btn btn-ghost" onclick="sharePDF()">↗ Share Agreement</button>
+      <button class="btn btn-primary" onclick="exportPDF()">Download Signed Contract PDF</button>
+      <button class="btn btn-primary" onclick="exportCertPDF()" style="background:linear-gradient(135deg, #2a6041 0%, #1a4030 100%); box-shadow:0 4px 20px rgba(90,184,138,0.3);">Download Stock Certificate PDF</button>
+      <button class="btn btn-ghost" onclick="sharePDF()">Share Agreement</button>
     </div>
     <div class="share-notice">Keep a copy of the signed PDF for your records. This agreement is governed by Florida law.</div>
 
@@ -595,7 +612,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
 const STORE_KEY = 'dw_loan_v2';
 const ZELLE_PHONE = '7274002225';
 const TIERS = [
-  { amount: 8000, shares: 2000, label: '$8,000', tag: 'Flagship' },
+  { amount: 8000, shares: 1600, label: '$8,000', tag: 'Flagship' },
   { amount: 6000, shares: 1200, label: '$6,000', tag: null },
   { amount: 4000, shares: 800,  label: '$4,000', tag: null },
   { amount: 0,    shares: 0,    label: 'Custom', tag: null }
@@ -616,6 +633,7 @@ const STEP_LABELS = [
 
 // ── Init ───────────────────────────────────────────────
 window.addEventListener('load', () => {
+  buildCustomDropdown();
   document.getElementById('refBadge').textContent = refNum;
   ['startDate', 'lDate', 'bDate'].forEach(id => {
     const el = document.getElementById(id);
@@ -695,12 +713,12 @@ function selectTier(idx, skipSave) {
     document.getElementById('sumShares').textContent = tier.shares.toLocaleString() + ' shares';
     customAmt = 0;
   } else {
-    const amt = parseFloat(document.getElementById('customAmt').value) || 0;
+    const amt = parseInt(document.getElementById('customAmt').value) || 0;
     customAmt = amt;
     const shares = calcShares(amt);
     const display = amt > 0 ? fmt(amt) : 'Custom';
     document.getElementById('customAmtDisplay').textContent = display;
-    document.getElementById('customShareDisplay').textContent = amt > 0 ? `Pledged: ${shares.toLocaleString()} shares` : 'Enter amount below';
+    document.getElementById('customShareDisplay').textContent = amt > 0 ? `Pledged: ${shares.toLocaleString()} shares` : 'Select amount below';
     document.getElementById('sumAmt').textContent = amt > 0 ? fmt(amt) : '—';
     document.getElementById('sumShares').textContent = amt > 0 ? shares.toLocaleString() + ' shares' : '—';
   }
@@ -709,18 +727,30 @@ function selectTier(idx, skipSave) {
 
 function calcShares(amt) {
   if (amt <= 0) return 0;
-  const base = Math.round(amt * 0.2);
-  if (amt > 10000) return Math.round(base * 1.05);
-  return base;
+  if (amt <= 10000) return Math.round(amt * 0.20);
+  // 20% on first $10k, 25% on excess over $10k
+  return Math.round(10000 * 0.20 + (amt - 10000) * 0.25);
+}
+
+// Populate custom dropdown with $500 increments
+function buildCustomDropdown() {
+  const sel = document.getElementById('customAmt');
+  for (let amt = 500; amt <= 50000; amt += 500) {
+    const opt = document.createElement('option');
+    opt.value = amt;
+    const shares = calcShares(amt);
+    opt.textContent = '$' + amt.toLocaleString() + '  →  ' + shares.toLocaleString() + ' shares';
+    sel.appendChild(opt);
+  }
 }
 
 function calcCustom() {
-  const amt = parseFloat(document.getElementById('customAmt').value) || 0;
+  const amt = parseInt(document.getElementById('customAmt').value) || 0;
   customAmt = amt;
   const shares = calcShares(amt);
   const display = amt > 0 ? fmt(amt) : 'Custom';
   document.getElementById('customAmtDisplay').textContent = display;
-  document.getElementById('customShareDisplay').textContent = amt > 0 ? `Pledged: ${shares.toLocaleString()} shares` : 'Enter amount below';
+  document.getElementById('customShareDisplay').textContent = amt > 0 ? `Pledged: ${shares.toLocaleString()} shares` : 'Select amount below';
   if (selTier === 3) {
     document.getElementById('sumAmt').textContent = amt > 0 ? fmt(amt) : '—';
     document.getElementById('sumShares').textContent = amt > 0 ? shares.toLocaleString() + ' shares' : '—';
@@ -1093,6 +1123,112 @@ async function sharePDF() {
   } catch (e) {
     try { buildPDF().save('DealWhisper_Loan_' + refNum + '.pdf'); } catch (e2) { alert('Unable to generate PDF.'); }
   }
+}
+
+// ── Stock Certificate PDF ──────────────────────────────
+function buildCertificatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'letter' });
+  const W = 279, H = 216;
+  const ml = 20, mt = 20;
+
+  const P = getActiveAmount();
+  const shares = getActiveShares();
+  const lenderName = v('lName') || '___________________';
+  const borrowerName = v('bName') || 'Peter W Davidsmeier';
+  const dateStr = fmtD(v('startDate'));
+
+  // Ornamental border — double rule
+  doc.setDrawColor(180, 155, 80);
+  doc.setLineWidth(1.5);
+  doc.rect(12, 10, W - 24, H - 20);
+  doc.setLineWidth(0.4);
+  doc.rect(15, 13, W - 30, H - 26);
+
+  // Corner flourishes (simple lines)
+  const corners = [[15, 13], [W - 15, 13], [15, H - 13], [W - 15, H - 13]];
+  doc.setLineWidth(0.3);
+  corners.forEach(([x, y]) => {
+    const dx = x < W / 2 ? 1 : -1, dy = y < H / 2 ? 1 : -1;
+    doc.line(x, y + dy * 8, x + dx * 8, y);
+  });
+
+  let y = 32;
+
+  // Header text
+  doc.setFont('times', 'normal'); doc.setFontSize(11); doc.setTextColor(140, 120, 60);
+  doc.text('DealWhisper Inc.', W / 2, y, { align: 'center' }); y += 6;
+  doc.setTextColor(100, 85, 45);
+  doc.setFontSize(8);
+  doc.text('A Florida C Corporation', W / 2, y, { align: 'center' }); y += 12;
+
+  // Title
+  doc.setFont('times', 'bold'); doc.setFontSize(28); doc.setTextColor(50, 42, 20);
+  doc.text('Stock Certificate', W / 2, y, { align: 'center' }); y += 8;
+  doc.setFont('times', 'normal'); doc.setFontSize(10); doc.setTextColor(120, 100, 50);
+  doc.text('Common Stock — Collateral Pledge', W / 2, y, { align: 'center' }); y += 4;
+
+  // Decorative line
+  doc.setDrawColor(180, 155, 80); doc.setLineWidth(0.5);
+  doc.line(W / 2 - 60, y, W / 2 + 60, y); y += 10;
+
+  // Certificate number
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(130);
+  doc.text('Certificate No: ' + refNum, W / 2, y, { align: 'center' }); y += 10;
+
+  // Share count — big
+  doc.setFont('times', 'bold'); doc.setFontSize(42); doc.setTextColor(40, 35, 15);
+  doc.text(shares.toLocaleString(), W / 2, y, { align: 'center' }); y += 7;
+  doc.setFont('times', 'normal'); doc.setFontSize(12); doc.setTextColor(100, 85, 45);
+  doc.text('Shares of Common Stock', W / 2, y, { align: 'center' }); y += 12;
+
+  // Body text
+  doc.setFont('times', 'normal'); doc.setFontSize(10); doc.setTextColor(60);
+  const body = `This certifies that ${lenderName} is entitled to ${shares.toLocaleString()} shares of Common Stock of DealWhisper Inc., pledged as collateral by ${borrowerName} pursuant to the Personal Promissory Note and Stock Pledge Agreement (${refNum}) dated ${dateStr}. These shares are held as collateral only and do not transfer unless an Event of Default occurs per the terms of said agreement.`;
+  const bodyLines = doc.splitTextToSize(body, W - 70);
+  doc.text(bodyLines, W / 2, y, { align: 'center', maxWidth: W - 70 }); y += bodyLines.length * 4.5 + 8;
+
+  // Loan amount note
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(100);
+  doc.text(`Loan Principal: ${fmt(P)}   |   Share Rate: 20%${P > 10000 ? ' (25% on excess over $10,000)' : ''}   |   Governed by Florida Law`, W / 2, y, { align: 'center' }); y += 12;
+
+  // Signature blocks
+  const sigY = y;
+  const sigW = 70;
+  const leftX = W / 2 - sigW - 20;
+  const rightX = W / 2 + 20;
+
+  // Signature lines
+  doc.setDrawColor(160); doc.setLineWidth(0.3);
+  doc.line(leftX, sigY, leftX + sigW, sigY);
+  doc.line(rightX, sigY, rightX + sigW, sigY);
+
+  // Signature images
+  try { doc.addImage(document.getElementById('bSig').toDataURL('image/png'), 'PNG', leftX, sigY - 18, sigW, 17); } catch (e) { }
+  try { doc.addImage(document.getElementById('lSig').toDataURL('image/png'), 'PNG', rightX, sigY - 18, sigW, 17); } catch (e) { }
+
+  // Labels
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(7); doc.setTextColor(80);
+  doc.text('ISSUER / BORROWER', leftX, sigY + 4);
+  doc.text('HOLDER / LENDER', rightX, sigY + 4);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(40);
+  doc.text(borrowerName, leftX, sigY + 9);
+  doc.text(lenderName, rightX, sigY + 9);
+  doc.setFontSize(7); doc.setTextColor(120);
+  doc.text('Date: ' + fmtD(v('bDate')), leftX, sigY + 13);
+  doc.text('Date: ' + fmtD(v('lDate')), rightX, sigY + 13);
+
+  // Footer
+  doc.setFont('helvetica', 'italic'); doc.setFontSize(6.5); doc.setTextColor(160);
+  doc.text('This certificate is issued as collateral documentation only. DealWhisper Inc. is not a party to this transaction.', W / 2, H - 18, { align: 'center' });
+  doc.text('Transfer of shares requires written default notice per the governing agreement. Consult a Florida-licensed attorney.', W / 2, H - 14, { align: 'center' });
+
+  return doc;
+}
+
+async function exportCertPDF() {
+  try { buildCertificatePDF().save('DealWhisper_StockCertificate_' + refNum + '.pdf'); }
+  catch (e) { alert('Certificate generation failed. Please complete all fields and signatures.'); }
 }
 
 function startOver() {
